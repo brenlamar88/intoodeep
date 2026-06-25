@@ -7,27 +7,32 @@ import { createClient } from "@/lib/supabase/client";
 function LoginForm() {
   const params = useSearchParams();
   const next = params.get("next") || "/admin";
-  const linkError = params.get("error");
 
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<"idle" | "signing" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  async function sendLink(e: React.FormEvent) {
+  async function signIn(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending");
+    setStatus("signing");
+    setMessage("");
     const supabase = createClient();
-    const redirectTo = `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
     });
     if (error) {
       setStatus("error");
-      setMessage(error.message);
-    } else {
-      setStatus("sent");
+      setMessage(
+        error.message === "Invalid login credentials"
+          ? "That email and password don't match. Check for typos and try again."
+          : error.message
+      );
+      return;
     }
+    // Full navigation so the server (middleware + layout) picks up the new session cookies.
+    window.location.assign(next);
   }
 
   return (
@@ -50,43 +55,45 @@ function LoginForm() {
         <div className="bg-deep border border-[var(--line)] rounded-[16px] p-8">
           <h1 className="font-display font-medium text-[24px] m-0 mb-2">Writer sign in</h1>
           <p className="text-[14px] text-[var(--foam-soft)] m-0 mb-6">
-            Enter your email and we&apos;ll send you a secure sign-in link. No password needed.
+            Enter your email and password to manage stories.
           </p>
 
-          {status === "sent" ? (
-            <div className="text-[15px] text-surface-soft bg-[rgba(95,201,201,0.1)] border border-[rgba(95,201,201,0.25)] rounded-[10px] p-4">
-              Check <b>{email}</b> for your sign-in link. You can close this tab —
-              opening the link will bring you straight to the dashboard.
-            </div>
-          ) : (
-            <form onSubmit={sendLink}>
-              <label className="block text-[13px] text-[var(--foam-soft)] mb-2">Email address</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full bg-[rgba(234,244,243,0.05)] border border-[var(--line-strong)] text-foam px-4 py-[13px] rounded-[10px] text-[15px] placeholder:text-[var(--foam-soft)] mb-4"
-              />
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="w-full bg-coral hover:bg-coral-soft disabled:opacity-60 text-abyss font-semibold text-[15px] px-[22px] py-[13px] rounded-[10px] cursor-pointer"
-              >
-                {status === "sending" ? "Sending…" : "Send me a sign-in link"}
-              </button>
-            </form>
-          )}
+          <form onSubmit={signIn}>
+            <label className="block text-[13px] text-[var(--foam-soft)] mb-2">Email address</label>
+            <input
+              type="email"
+              required
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full bg-[rgba(234,244,243,0.05)] border border-[var(--line-strong)] text-foam px-4 py-[13px] rounded-[10px] text-[15px] placeholder:text-[var(--foam-soft)] mb-4"
+            />
+            <label className="block text-[13px] text-[var(--foam-soft)] mb-2">Password</label>
+            <input
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full bg-[rgba(234,244,243,0.05)] border border-[var(--line-strong)] text-foam px-4 py-[13px] rounded-[10px] text-[15px] placeholder:text-[var(--foam-soft)] mb-5"
+            />
+            <button
+              type="submit"
+              disabled={status === "signing"}
+              className="w-full bg-coral hover:bg-coral-soft disabled:opacity-60 text-abyss font-semibold text-[15px] px-[22px] py-[13px] rounded-[10px] cursor-pointer"
+            >
+              {status === "signing" ? "Signing in…" : "Sign in"}
+            </button>
+          </form>
 
-          {(status === "error" || linkError) && (
-            <p className="text-[13px] text-coral-soft mt-4 mb-0">
-              {message || "That sign-in link was invalid or expired. Please request a new one."}
-            </p>
+          {status === "error" && (
+            <p className="text-[13px] text-coral-soft mt-4 mb-0">{message}</p>
           )}
         </div>
         <p className="text-center text-[13px] text-[var(--foam-soft)] mt-6">
-          Access is invite-only. Ask the site owner to add your email.
+          Access is invite-only. Ask the site owner for an account.
         </p>
       </div>
     </div>
