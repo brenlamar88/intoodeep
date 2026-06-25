@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --abyss: #091e28;
+  --deep: #0f2c3a;
+  --deep-2: #15394a;
+  --deep-3: #1d4658;
+  --surface: #5fc9c9;
+  --surface-soft: #8fdede;
+  --coral: #ff7f63;
+  --coral-soft: #ff9d86;
+  --foam: #eaf4f3;
+  --foam-soft: #9fbdc0;
+  --line: rgba(234, 244, 243, 0.11);
+  --line-strong: rgba(234, 244, 243, 0.2);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--abyss);
+  color: var(--foam);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* god-rays from the surface (hero) */
+.rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.rays span {
+  position: absolute;
+  top: -40%;
+  width: 120px;
+  height: 170%;
+  background: linear-gradient(180deg, rgba(95, 201, 201, 0.16), rgba(95, 201, 201, 0));
+  transform: skewX(-14deg);
+  filter: blur(6px);
+}
+.rays span:nth-child(1) { left: 8%; }
+.rays span:nth-child(2) { left: 30%; width: 70px; opacity: 0.7; }
+.rays span:nth-child(3) { left: 62%; width: 150px; opacity: 0.55; }
+.rays span:nth-child(4) { left: 82%; width: 90px; opacity: 0.65; }
+
+/* ---- long-form article typography (rendered post body) ---- */
+.prose-deep {
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--foam);
+}
+.prose-deep > * + * { margin-top: 1.2em; }
+.prose-deep h2 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.3px;
+  margin-top: 1.8em;
+  margin-bottom: 0.4em;
+  line-height: 1.2;
+}
+.prose-deep h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  margin-top: 1.5em;
+  margin-bottom: 0.3em;
+}
+.prose-deep p { color: var(--foam); }
+.prose-deep a {
+  color: var(--surface-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-deep a:hover { color: var(--surface); }
+.prose-deep strong { color: #fff; font-weight: 600; }
+.prose-deep ul,
+.prose-deep ol { padding-left: 1.4em; }
+.prose-deep ul { list-style: disc; }
+.prose-deep ol { list-style: decimal; }
+.prose-deep li { margin-top: 0.5em; }
+.prose-deep blockquote {
+  border-left: 3px solid var(--coral);
+  padding-left: 20px;
+  margin-left: 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--surface-soft);
+}
+.prose-deep img {
+  border-radius: 14px;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.prose-deep code {
+  background: rgba(234, 244, 243, 0.08);
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+.prose-deep hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2em 0;
+}
+
+/* ---- Tiptap editor surface (admin) ---- */
+.tiptap {
+  min-height: 420px;
+  outline: none;
+}
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--foam-soft);
+  pointer-events: none;
+  height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
