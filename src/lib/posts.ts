@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { Post } from "@/lib/types";
 
 /**
@@ -9,7 +9,7 @@ import type { Post } from "@/lib/types";
 
 export async function getPublishedPosts(limit?: number): Promise<Post[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     let query = supabase
       .from("posts")
       .select("*")
@@ -28,7 +28,7 @@ export async function getPublishedPostBySlug(
   slug: string
 ): Promise<Post | null> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("posts")
       .select("*")
@@ -46,7 +46,7 @@ export async function getPublishedSlugs(): Promise<
   { slug: string; updated_at: string }[]
 > {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("posts")
       .select("slug, updated_at")
