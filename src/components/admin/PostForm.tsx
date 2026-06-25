@@ -98,53 +98,57 @@ export function PostForm({ post }: { post?: Post }) {
   );
 
   return (
-    <div>
-      <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-        <h1 className="font-display font-medium text-[26px] m-0">
-          {post ? "Edit post" : "New post"}
-        </h1>
-        <div className="flex items-center gap-2">
-          {post && (
-            <button onClick={onDelete} disabled={isPending}
-              className="text-[14px] text-[var(--foam-soft)] hover:text-coral-soft px-3 py-[10px] cursor-pointer">
-              Delete
+    <div className="pb-4">
+      {/* STICKY ACTION BAR */}
+      <div className="sticky top-0 z-30 -mx-4 sm:-mx-6 lg:-mx-8 mb-7 sm:mb-9 border-b border-[var(--line)] bg-[rgba(9,30,40,0.82)] backdrop-blur-md">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5">
+          <div className="flex items-center gap-3 min-w-0">
+            <h1 className="font-display font-medium text-[19px] sm:text-[22px] m-0 truncate">
+              {post ? "Edit post" : "New post"}
+            </h1>
+            {post && <StatusPill status={post.status} />}
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button onClick={() => submit("draft")} disabled={isPending}
+              className="bg-deep border border-[var(--line-strong)] hover:border-foam text-foam font-medium text-[13.5px] sm:text-[14px] px-3.5 sm:px-5 py-2.5 rounded-[10px] cursor-pointer disabled:opacity-60 transition-colors">
+              Save<span className="hidden sm:inline"> draft</span>
             </button>
-          )}
-          <button onClick={() => submit("draft")} disabled={isPending}
-            className="bg-deep border border-[var(--line-strong)] hover:border-foam text-foam font-medium text-[14px] px-5 py-[10px] rounded-[10px] cursor-pointer disabled:opacity-60">
-            Save draft
-          </button>
-          <button onClick={() => submit("published")} disabled={isPending}
-            className="bg-coral hover:bg-coral-soft text-abyss font-semibold text-[14px] px-5 py-[10px] rounded-[10px] cursor-pointer disabled:opacity-60">
-            {isPending ? "Saving…" : post?.status === "published" ? "Update" : "Publish"}
-          </button>
+            <button onClick={() => submit("published")} disabled={isPending}
+              className="bg-coral hover:bg-coral-soft text-abyss font-semibold text-[13.5px] sm:text-[14px] px-4 sm:px-5 py-2.5 rounded-[10px] cursor-pointer disabled:opacity-60 transition-colors">
+              {isPending ? "Saving…" : post?.status === "published" ? "Update" : "Publish"}
+            </button>
+          </div>
         </div>
       </div>
 
       {error && (
-        <div className="mb-5 text-[14px] text-coral-soft bg-[rgba(255,127,99,0.1)] border border-[rgba(255,127,99,0.3)] rounded-[10px] px-4 py-3">
+        <div className="mb-6 text-[14px] text-coral-soft bg-[rgba(255,127,99,0.1)] border border-[rgba(255,127,99,0.3)] rounded-[10px] px-4 py-3">
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_330px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 lg:gap-8 xl:gap-10 items-start">
         {/* MAIN COLUMN */}
-        <div className="space-y-5">
-          <input
-            value={title}
-            onChange={(e) => onTitleChange(e.target.value)}
-            placeholder="Post title"
-            className="w-full bg-transparent border-0 border-b border-[var(--line)] focus:border-coral outline-none font-display font-medium text-[28px] py-2 placeholder:text-[var(--foam-soft)]"
-          />
-
-          <div className="flex items-center gap-2 text-[13px] text-[var(--foam-soft)]">
-            <span>{getSiteUrlClient()}/blog/</span>
+        <div className="space-y-6 sm:space-y-7 min-w-0">
+          <div className="space-y-3">
             <input
-              value={slug}
-              onChange={(e) => { setSlug(slugify(e.target.value)); setSlugTouched(true); }}
-              placeholder="url-slug"
-              className="flex-1 bg-deep border border-[var(--line)] focus:border-coral outline-none rounded-[8px] px-3 py-[7px] text-foam"
+              value={title}
+              onChange={(e) => onTitleChange(e.target.value)}
+              placeholder="Post title"
+              className="w-full bg-transparent border-0 border-b border-[var(--line)] focus:border-coral outline-none font-display font-medium text-[26px] sm:text-[30px] leading-tight py-2.5 placeholder:text-[var(--foam-soft)]"
             />
+
+            <div className="flex items-stretch rounded-[10px] border border-[var(--line)] focus-within:border-coral bg-deep overflow-hidden">
+              <span className="flex items-center pl-3.5 pr-1 text-[12.5px] text-[var(--foam-soft)] whitespace-nowrap select-none">
+                <span className="hidden md:inline">{getSiteUrlClient()}</span>/blog/
+              </span>
+              <input
+                value={slug}
+                onChange={(e) => { setSlug(slugify(e.target.value)); setSlugTouched(true); }}
+                placeholder="url-slug"
+                className="flex-1 min-w-0 bg-transparent outline-none pr-3.5 md:pl-0 pl-1 py-[10px] text-[13px] text-foam placeholder:text-[var(--foam-soft)]"
+              />
+            </div>
           </div>
 
           <RichTextEditor value={contentHtml} onChange={setContentHtml} />
@@ -156,22 +160,31 @@ export function PostForm({ post }: { post?: Post }) {
               rows={3}
               maxLength={200}
               placeholder="On letting yourself go under for a minute — and why hiding it isn't always the kindness we think it is."
-              className="w-full bg-deep border border-[var(--line)] focus:border-coral outline-none rounded-[10px] px-4 py-3 text-[14px] text-foam resize-y placeholder:text-[var(--foam-soft)]"
+              className="w-full bg-deep border border-[var(--line)] focus:border-coral outline-none rounded-[10px] px-4 py-3 text-[14px] text-foam resize-y placeholder:text-[var(--foam-soft)] leading-relaxed"
             />
           </Field>
+
+          {post && (
+            <div className="pt-5 border-t border-[var(--line)]">
+              <button onClick={onDelete} disabled={isPending}
+                className="text-[13.5px] text-[var(--foam-soft)] hover:text-coral-soft cursor-pointer disabled:opacity-60 transition-colors">
+                Delete this post
+              </button>
+            </div>
+          )}
         </div>
 
         {/* SIDEBAR */}
-        <div className="space-y-5">
+        <div className="space-y-5 sm:space-y-6">
           <SeoChecklist f={seoFields} />
 
           {/* Google preview */}
-          <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5">
-            <h3 className="font-display font-medium text-[15px] m-0 mb-3">Search preview</h3>
-            <div className="bg-white rounded-[8px] p-3">
+          <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5 sm:p-6">
+            <h3 className="font-display font-medium text-[15px] m-0 mb-4">Search preview</h3>
+            <div className="bg-white rounded-[8px] p-3.5">
               <div className="text-[#202124] text-[12px] truncate">{previewUrl}</div>
-              <div className="text-[#1a0dab] text-[16px] leading-tight truncate">{previewTitle}</div>
-              <div className="text-[#4d5156] text-[12.5px] leading-snug line-clamp-2">{previewDesc}</div>
+              <div className="text-[#1a0dab] text-[16px] leading-tight truncate mt-0.5">{previewTitle}</div>
+              <div className="text-[#4d5156] text-[12.5px] leading-snug line-clamp-2 mt-1">{previewDesc}</div>
             </div>
           </div>
 
@@ -254,11 +267,30 @@ export function PostForm({ post }: { post?: Post }) {
   );
 }
 
+function StatusPill({ status }: { status: PostStatus }) {
+  const published = status === "published";
+  return (
+    <span
+      className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.6px] px-2.5 py-1 rounded-full shrink-0"
+      style={{
+        color: published ? "var(--surface)" : "var(--foam-soft)",
+        background: published ? "rgba(95,201,201,0.12)" : "rgba(234,244,243,0.07)",
+      }}
+    >
+      <span
+        className="w-[6px] h-[6px] rounded-full"
+        style={{ background: published ? "var(--surface)" : "var(--foam-soft)" }}
+      />
+      {published ? "Published" : "Draft"}
+    </span>
+  );
+}
+
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[14px] font-medium mb-1">{label}</label>
-      {hint && <p className="text-[12.5px] text-[var(--foam-soft)] m-0 mb-2">{hint}</p>}
+      <label className="block text-[14px] font-medium mb-1.5">{label}</label>
+      {hint && <p className="text-[12.5px] text-[var(--foam-soft)] m-0 mb-2.5 leading-relaxed">{hint}</p>}
       {children}
     </div>
   );
@@ -266,9 +298,9 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 
 function SmallField({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div className="mb-3">
+    <div className="mb-4 last:mb-0">
       <label className="block text-[12.5px] font-medium mb-1">{label}</label>
-      {hint && <p className="text-[11.5px] text-[var(--foam-soft)] m-0 mb-[6px]">{hint}</p>}
+      {hint && <p className="text-[11.5px] text-[var(--foam-soft)] m-0 mb-2 leading-relaxed">{hint}</p>}
       {children}
     </div>
   );
@@ -276,8 +308,8 @@ function SmallField({ label, hint, children }: { label: string; hint?: string; c
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5">
-      <h3 className="font-display font-medium text-[15px] m-0 mb-3">{title}</h3>
+    <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5 sm:p-6">
+      <h3 className="font-display font-medium text-[15px] m-0 mb-4">{title}</h3>
       {children}
     </div>
   );

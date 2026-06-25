@@ -49,7 +49,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-abyss text-foam">
       <header className="border-b border-[var(--line)]">
-        <div className="max-w-[1100px] mx-auto px-6 flex items-center justify-between py-4">
+        <div className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4">
           <div className="flex items-center gap-6">
             <Link href="/admin" className="flex items-center gap-[10px]">
               <div
@@ -81,7 +81,7 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
-      <main className="max-w-[1100px] mx-auto px-6 py-8">{children}</main>
+      <main className="max-w-[1180px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">{children}</main>
     </div>
   );
 }
