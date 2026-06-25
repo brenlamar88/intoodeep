@@ -69,7 +69,7 @@ export function RichTextEditor({
 
   return (
     <div className="bg-deep border border-[var(--line)] rounded-[14px] overflow-hidden">
-      <div className="flex flex-wrap items-center gap-0.5 sm:gap-1 p-1.5 sm:p-2 border-b border-[var(--line)] sticky top-[58px] sm:top-[64px] bg-deep z-10">
+      <div className="flex flex-wrap items-center gap-0.5 sm:gap-1 p-1.5 sm:p-2 border-b border-[var(--line)] bg-deep">
         <Btn editor={editor} active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()} label="Bold"><Bold size={16} /></Btn>
         <Btn editor={editor} active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()} label="Italic"><Italic size={16} /></Btn>
         <Divider />
@@ -88,7 +88,7 @@ export function RichTextEditor({
         <Btn editor={editor} active={false} onClick={() => editor.chain().focus().redo().run()} label="Redo"><Redo size={16} /></Btn>
         <input ref={fileInput} type="file" accept="image/*" hidden onChange={onPickImage} />
       </div>
-      <div className="px-4 sm:px-6 py-5 sm:py-6">
+      <div className="px-4 sm:px-6 py-5 sm:py-6 max-h-[60vh] overflow-y-auto">
         <EditorContent editor={editor} />
       </div>
     </div>

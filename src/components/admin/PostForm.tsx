@@ -100,7 +100,7 @@ export function PostForm({ post }: { post?: Post }) {
   return (
     <div className="pb-4">
       {/* STICKY ACTION BAR */}
-      <div className="sticky top-0 z-30 -mx-4 sm:-mx-6 lg:-mx-8 mb-7 sm:mb-9 border-b border-[var(--line)] bg-[rgba(9,30,40,0.82)] backdrop-blur-md">
+      <div className="lg:sticky lg:top-0 z-30 -mx-4 sm:-mx-6 lg:-mx-8 mb-7 sm:mb-9 border-b border-[var(--line)] bg-[rgba(9,30,40,0.82)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5">
           <div className="flex items-center gap-3 min-w-0">
             <h1 className="font-display font-medium text-[19px] sm:text-[22px] m-0 truncate">
