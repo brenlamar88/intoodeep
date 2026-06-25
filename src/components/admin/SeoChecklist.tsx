@@ -82,7 +82,7 @@ export function SeoChecklist({ f }: { f: Fields }) {
     score >= 80 ? "var(--surface)" : score >= 50 ? "#f4c95d" : "var(--coral)";
 
   return (
-    <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5">
+    <div className="bg-deep border border-[var(--line)] rounded-[14px] p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-display font-medium text-[16px] m-0">SEO readiness</h3>
         <span className="font-semibold text-[15px]" style={{ color: scoreColor }}>
